@@ -1,5 +1,5 @@
 flask==2.3.2
 numpy==1.23.5
 opencv-python-headless==4.8.0.74
-setuptools
-wheel
+gunicorn==21.2.0
+
