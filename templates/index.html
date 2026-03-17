@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>AI Emotion Detection</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+
+/* 🌈 Default animated gradient */
+background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #a18cd1, #84fab0);
+background-size: 400% 400%;
+animation: gradientFlow 10s ease infinite;
+transition: background 0.8s ease;
+}
+
+/* 🌈 Animation */
+@keyframes gradientFlow {
+0% { background-position: 0% 50%; }
+50% { background-position: 100% 50%; }
+100% { background-position: 0% 50%; }
+}
+
+/* ✨ Glass Card */
+.container{
+background: rgba(255,255,255,0.12);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+
+padding:45px;
+border-radius:25px;
+width:420px;
+text-align:center;
+
+border:1px solid rgba(255,255,255,0.2);
+box-shadow:0 20px 40px rgba(0,0,0,0.3);
+color:white;
+position:relative;
+overflow:hidden;
+}
+
+/* ✨ Glow effect */
+.container::before{
+content:"";
+position:absolute;
+top:-50%;
+left:-50%;
+width:200%;
+height:200%;
+background: radial-gradient(circle, rgba(255,255,255,0.15), transparent 60%);
+transform:rotate(25deg);
+}
+
+/* Title */
+h1{
+margin-bottom:25px;
+font-weight:600;
+letter-spacing:1px;
+}
+
+/* File Input */
+input[type="file"]{
+padding:12px;
+border-radius:12px;
+background:rgba(255,255,255,0.2);
+color:white;
+border:none;
+width:100%;
+cursor:pointer;
+margin-bottom:10px;
+}
+
+input[type="file"]::file-selector-button{
+background: linear-gradient(135deg,#ffffff,#e0e0e0);
+color:#333;
+border:none;
+padding:8px 15px;
+border-radius:8px;
+cursor:pointer;
+}
+
+/* Button */
+button{
+margin-top:10px;
+padding:12px 25px;
+background: linear-gradient(135deg,#ff6a88,#ff99ac);
+color:white;
+border:none;
+border-radius:30px;
+cursor:pointer;
+font-size:16px;
+font-weight:500;
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.07);
+box-shadow:0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* Image Preview */
+.preview img{
+width:250px;
+border-radius:18px;
+margin-top:20px;
+box-shadow:0 10px 25px rgba(0,0,0,0.4);
+transition:0.3s;
+}
+
+.preview img:hover{
+transform:scale(1.05);
+}
+
+/* Result */
+.result{
+margin-top:25px;
+padding:18px;
+border-radius:15px;
+background: rgba(255,255,255,0.2);
+backdrop-filter: blur(10px);
+}
+
+.result h2{
+font-weight:600;
+margin-bottom:5px;
+}
+
+.result h3{
+font-weight:400;
+opacity:0.9;
+}
+
+/* Fade animation */
+.container{
+animation:fadeIn 1s ease;
+}
+
+@keyframes fadeIn{
+from{
+opacity:0;
+transform:translateY(30px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+</style>
+</head>
+
+
+<body id="body">
+
+<div class="container">
+
+<h1>Face Emotion Detection</h1>
+
+<form method="POST" enctype="multipart/form-data">
+
+<input type="file" name="file" accept="image/*" onchange="previewImage(event)" required>
+
+<button type="submit">Detect Emotion</button>
+
+</form>
+
+<div class="preview">
+
+{% if image_path %}
+<img id="preview" src="{{ image_path }}">
+{% else %}
+<img id="preview" style="display:none;">
+{% endif %}
+
+</div>
+
+
+{% if emotion %}
+
+<div class="result">
+
+<h2>Emotion: {{ emotion }}</h2>
+<h3>Confidence: {{ confidence }}%</h3>
+
+</div>
+
+{% endif %}
+
+</div>
+
+
+<script>
+
+/* 📸 Preview Image */
+function previewImage(event){
+const preview = document.getElementById('preview');
+preview.src = URL.createObjectURL(event.target.files[0]);
+preview.style.display = "block";
+}
+
+/* 🎭 Emotion-based background */
+function setEmotionTheme(emotion){
+
+const body = document.getElementById("body");
+
+switch(emotion.toLowerCase()){
+
+case "happy":
+body.style.background = "linear-gradient(135deg,#f6d365,#fda085)";
+break;
+
+case "sad":
+body.style.background = "linear-gradient(135deg,#5f9cff,#6a82fb)";
+break;
+
+case "angry":
+body.style.background = "linear-gradient(135deg,#ff4e50,#f00000)";
+break;
+
+case "surprise":
+body.style.background = "linear-gradient(135deg,#a18cd1,#fbc2eb)";
+break;
+
+default:
+body.style.background = "linear-gradient(-45deg,#ff9a9e,#fad0c4,#a18cd1,#84fab0)";
+}
+
+}
+
+/* 🚀 Auto apply theme when result comes */
+{% if emotion %}
+setEmotionTheme("{{ emotion }}");
+{% endif %}
+
+</script>
+
+</body>
+</html>
